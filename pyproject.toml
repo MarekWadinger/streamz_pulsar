@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "streamz_pulsar"
-version = "0.1.0"
+version = "0.1.0.post1"
 description = ""
 authors = [
     "Marek Wadinger <marekwadinger@icloud.com>",
@@ -14,7 +14,11 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+
+repository = "https://github.com/MarekWadinger/streamz_pulsar"
 packages = [{include = "streamz_pulsar"}]
+readme = "README.md"
+keywords = ["streamz", "pulsar"]
 
 [tool.poetry.dependencies]
 python = "^3.7.2"
