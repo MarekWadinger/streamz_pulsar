@@ -23,21 +23,21 @@ class to_pulsar(PulsarNode, Sink):  # pylint: disable=C0103
         The topic which to write
     producer_config : dict
         Settings to set up the stream, see
-        https://docs.confluent.io/current/clients/confluent-pulsar-python/#configuration
-        https://github.com/edenhill/librdpulsar/blob/master/CONFIGURATION.md
+        https://pulsar.apache.org/api/python/3.2.x/pulsar.Client.html
         Examples:
-        bootstrap.servers: Connection string (host:port) to Kafka
+        service_url: The Pulsar service url eg: pulsar://my-broker.com:6650/
 
     Examples
     --------
+    >>> import pulsar
     >>> from streamz import Stream
-    >>> ARGS = {'bootstrap.servers': 'localhost:9092'}
-    >>> source = Stream()
-    >>> pulsar = source.map(lambda x: str(x)).to_pulsar('test', ARGS)
-    <to_pulsar>
-    >>> for i in range(10):
-    ...     source.emit(i)
-    >>> pulsar.flush()
+    >>> s = Stream.from_pulsar(
+    ...     ['my-topic'],
+    ...     subscription_name='my-sub',
+    ...     consumer_params={'service_url': 'pulsar://localhost:6650'}
+    ...     )
+    >>> s.map(lambda x: x.decode())
+    >>> L = s.sink_to_list()
     """
     def __init__(self, upstream, topic, producer_config, **kwargs):
 

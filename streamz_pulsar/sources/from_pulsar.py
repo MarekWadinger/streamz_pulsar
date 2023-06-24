@@ -16,35 +16,36 @@ from tornado import gen
 class from_pulsar(Source):  # pylint: disable=C0103
     """ Accepts messages from Pulsar
 
-    Uses the confluent-pulsar library,
-    https://docs.confluent.io/current/clients/confluent-pulsar-python/
+    Uses the pulsar library,
+    https://pulsar.apache.org/docs/next/client-libraries-python/
 
 
     Parameters
     ----------
     topics: list of str
         Labels of Pulsar topics to consume from
+    subscription_name: string
+        The name of the subscription
     consumer_params: dict
         Settings to set up the stream, see
-        https://docs.confluent.io/current/clients/confluent-pulsar-python/#configuration
-        https://github.com/edenhill/librdpulsar/blob/master/CONFIGURATION.md
+        https://pulsar.apache.org/api/python/3.2.x/pulsar.Client.html
         Examples:
-        bootstrap.servers, Connection string(s) (host:port) by which to reach
-        Pulsar;
+        service_url: The Pulsar service url eg: pulsar://my-broker.com:6650/;
         group.id, Identity of the consumer. If multiple sources share the same
         group, each message will be passed to only one of them.
     poll_interval: number
         Seconds that elapse between polling Pulsar for new messages
-    start: bool (False)
-        Whether to start polling upon instantiation
 
     Examples
     --------
-
-    >>> source = Stream.from_pulsar(['mytopic'],
-    ...           {'bootstrap.servers': 'localhost:9092',
-    ...            'group.id': 'streamz'})  # doctest: +SKIP
-
+    >>> from streamz import Stream
+    >>> source = Stream()
+    >>> producer_ = source.to_pulsar(
+    ...     'my-topic',
+    ...     producer_config={'service_url': 'pulsar://localhost:6650'}
+    ...     )  # doctest: +SKIP
+    >>> for i in range(3):
+    ...     source.emit(('hello-pulsar-%d' % i).encode('utf-8'))
     """
     def __init__(
             self,

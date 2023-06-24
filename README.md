@@ -1,4 +1,4 @@
-# Poetry plugin for Streamz
+# Pulsar plugin for Streamz
 
 This a plugin for [Streamz](https://github.com/python-streamz/streamz) that adds stream
 nodes for writing and reading data from/to Poetry.
@@ -63,7 +63,7 @@ from streamz import Stream
 
 source = Stream()
 producer_ = source.to_pulsar(
-    'my-topic', 
+    'my-topic',
     producer_config={'service_url': 'pulsar://localhost:6650'}
     )
 
