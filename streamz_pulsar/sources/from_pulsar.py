@@ -38,14 +38,15 @@ class from_pulsar(Source):  # pylint: disable=C0103
 
     Examples
     --------
+    >>> import pulsar
     >>> from streamz import Stream
-    >>> source = Stream()
-    >>> producer_ = source.to_pulsar(
-    ...     'my-topic',
-    ...     producer_config={'service_url': 'pulsar://localhost:6650'}
-    ...     )  # doctest: +SKIP
-    >>> for i in range(3):
-    ...     source.emit(('hello-pulsar-%d' % i).encode('utf-8'))
+    >>> s = Stream.from_pulsar(
+    ...     ['my-topic'],
+    ...     subscription_name='my-sub',
+    ...     consumer_params={'service_url': 'pulsar://localhost:6650'}
+    ...     )
+    >>> decoder = s.map(lambda x: x.decode())
+    >>> L = decoder.sink_to_list()
     """
     def __init__(
             self,
