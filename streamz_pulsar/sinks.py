@@ -32,17 +32,24 @@ class to_pulsar(PulsarNode, Sink):  # pylint: disable=C0103
     >>> from streamz import Stream
     >>> source = Stream()
     >>> producer_ = source.to_pulsar(
-    ...     'my-topic',
-    ...     producer_config={'service_url': 'pulsar://localhost:6650'}
+    ...     'pulsar://localhost:6650'
+    ...     'my-topic'
     ...     )  # doctest: +SKIP
     >>> for i in range(3):
     ...     source.emit(('hello-pulsar-%d' % i).encode('utf-8'))
     """
-    def __init__(self, upstream, topic, producer_config, **kwargs):
+    def __init__(
+            self,
+            upstream,
+            service_url,
+            topic,
+            producer_config={},
+            **kwargs):
 
         self.topic = topic
-        self.client = pulsar.Client(**producer_config)
-        self.producer = self.client.create_producer(self.topic)
+        self.client = pulsar.Client(service_url)
+        self.producer = self.client.create_producer(
+            self.topic, **producer_config)
 
         kwargs["ensure_io_loop"] = True
         super().__init__(upstream, **kwargs)

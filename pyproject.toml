@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "streamz_pulsar"
-version = "0.1.0.post2"
+version = "0.1.1"
 description = ""
 authors = [
     "Marek Wadinger <marekwadinger@icloud.com>",

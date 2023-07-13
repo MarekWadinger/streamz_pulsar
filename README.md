@@ -36,9 +36,9 @@ import pulsar
 from streamz import Stream
 
 s = Stream.from_pulsar(
+    'pulsar://localhost:6650',
     ['my-topic'],
-    subscription_name='my-sub',
-    consumer_params={'service_url': 'pulsar://localhost:6650'}
+    subscription_name='my-sub'
     )
 
 s.map(lambda x: x.decode())
@@ -63,8 +63,8 @@ from streamz import Stream
 
 source = Stream()
 producer_ = source.to_pulsar(
+    'pulsar://localhost:6650',
     'my-topic',
-    producer_config={'service_url': 'pulsar://localhost:6650'}
     )
 
 for i in range(3):

@@ -41,23 +41,25 @@ class from_pulsar(Source):  # pylint: disable=C0103
     >>> import pulsar
     >>> from streamz import Stream
     >>> s = Stream.from_pulsar(
+    ...     'pulsar://localhost:6650',
     ...     ['my-topic'],
-    ...     subscription_name='my-sub',
-    ...     consumer_params={'service_url': 'pulsar://localhost:6650'}
+    ...     subscription_name='my-sub'
     ...     )
     >>> decoder = s.map(lambda x: x.decode())
     >>> L = decoder.sink_to_list()
     """
     def __init__(
             self,
+            service_url,
             topics,
             subscription_name,
-            consumer_params,
+            consumer_params={},
             poll_interval=0.1,
             **kwargs):
-        self.cpars = consumer_params
-        self.subscription_name = subscription_name
         self.consumer = None
+        self.cpars = consumer_params
+        self.service_url = service_url
+        self.subscription_name = subscription_name
         self.topics = topics
         self.poll_interval = poll_interval
         super().__init__(**kwargs)
@@ -87,9 +89,9 @@ class from_pulsar(Source):  # pylint: disable=C0103
     def start(self):
         if self.stopped:
             self.stopped = False
-            self.client = pulsar.Client(**self.cpars)
+            self.client = pulsar.Client(self.service_url)
             self.consumer = self.client.subscribe(
-                self.topics, self.subscription_name)
+                self.topics, self.subscription_name, **self.cpars)
             weakref.finalize(
                 self, lambda consumer=self.consumer: _close_consumer(consumer)
             )
