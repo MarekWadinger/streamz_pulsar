@@ -1,0 +1,14 @@
+services:
+  pulsar:
+    image: apachepulsar/pulsar:latest
+    ports:
+      - 6650:6650
+      - 8000:8080
+    volumes:
+      - pulsardata:/pulsar/data
+      - pulsarconf:/pulsar/conf
+    command: bin/pulsar standalone
+  
+volumes:
+  pulsardata:
+  pulsarconf:
